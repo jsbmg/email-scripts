@@ -1,0 +1,18 @@
+#! /bin/sh -e
+#
+# Helper for mflag (default to -S, aka "mark seen") 
+
+option="-S"
+
+for var in "$@"
+do
+   case $var in
+       ''|*[0-9]*) idx=$var ;;
+       *) option=$var ;;
+   esac
+done
+
+echo $option 
+echo $idx
+
+mflag $option $idx

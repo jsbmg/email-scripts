@@ -1,0 +1,1 @@
+mshow $(echo $1 | grep -o -E '[0-9]+' | head -1 | sed -e 's/^0\+//') | mflow -f  
