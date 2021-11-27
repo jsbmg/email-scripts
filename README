@@ -5,7 +5,7 @@ This repository contains a few helper scripts for doing email with mblaze.
 https://github.com/leahneukirchen/mblaze
 
 m - quick summary of mail (unread, by default)
-ml - view, mark, and reply to mail using fzf as the interface (unread, bu default)
+ml - view, mark, and reply to mail using fzf as the interface (unread, by default)
 mf - flag emails (as read, by default)
 md - download attachments from an email
 
