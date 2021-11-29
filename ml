@@ -3,7 +3,8 @@
 # Fzf email viewer
 # Usage: ml [mlist option] [Inbox|Sent|...]
 
-[ -z $MAILDIR ] && printf "MAILDIR not set. Try 'export MAILDIR=/path/to/maildir'." && exit
+[ -z $MAILDIR ] && printf "MAILDIR not set. \
+        Try 'export MAILDIR=/path/to/maildir'." && exit
 
 option="-s"
 
