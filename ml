@@ -1,7 +1,12 @@
 #! /bin/sh -e
 #
 # Fzf email viewer
-# Usage: ml [mlist option] [Inbox|Sent|...]
+# Usage: ml [MLIST OPTION] [MAILBOX: Inbox|Sent|...etc]
+#
+# Options:
+# If the name of a valid maildir subfolder is passed (e.g. Inbox,
+# Sent, etc.), that mailbox will be displayed. All other options are
+# passed to mlist (see $ man mlist).
 
 [ -z $MAILDIR ] && printf "MAILDIR not set. \
         Try 'export MAILDIR=/path/to/maildir'." && exit
