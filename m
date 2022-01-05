@@ -1,8 +1,18 @@
 #! /bin/sh
 #
-# List most recent n number of emails 
-# Usage: $ m [mlist filter options (see man mlist)] [mailbox name, e.g. "Inbox"] [num emails to show] 
-# No args = shows the latest 10 unseen emails in $MAILDIR/Inbox 
+# List most recent emails 
+# Usage: $ m [MLIST OPTION] [MAILBOX] [NUM] 
+#
+# Options:
+# MLIST OPTION
+#    Any option that can be passed to mlist (e.g. "-S")
+# MAILBOX
+#    The maildir subfolder (e.g. Inbox, Sent, etc.)
+# NUM
+#    The number of most recent emails to show 
+# 
+# No options = shows the latest 10 unseen emails in $MAILDIR/Inbox 
+
 
 [ -z $MAILDIR ] && printf "MAILDIR not set. Try 'export MAILDIR=/path/to/maildir'." && exit 
 
