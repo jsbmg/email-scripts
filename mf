@@ -12,7 +12,4 @@ do
    esac
 done
 
-echo $option 
-echo $idx
-
 mflag $option $idx
