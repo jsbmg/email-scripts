@@ -50,8 +50,10 @@ fi
 
 selection=$(mlist $option $context | msort -d -r | mseq -S | mscan | fzf \
           --preview="_fzf-mshow {}" \
-          --bind "ctrl-u:execute-silent*_fzf-mflag -s {}* +reload[mlist $option $context | msort -d -r | mseq -S | mscan]" \
-          --bind "ctrl-r:execute-silent*_fzf-mflag -S {}* +reload[mlist $option $context | msort -d -r | mseq -S | mscan]" \
+          --bind "ctrl-u:execute-silent*_fzf-mflag -s {}*
+                  +reload[_ml-reload $option $context]" \
+          --bind "ctrl-r:execute-silent*_fzf-mflag -S {}*
+                  +reload[_ml-reload $option $context]" \
           --bind "ctrl-v:execute*mless {} < /dev/tty > /dev/tty 2>&1*" \
           --bind "ctrl-d:execute*md {}*") || return
 

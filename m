@@ -1,7 +1,7 @@
 #! /bin/sh
 #
-# List most recent emails 
-# Usage: $ m [MLIST OPTION] [MAILBOX] [NUM] 
+# List most recent emails
+# Usage: $ m [MLIST OPTION] [MAILBOX] [NUM]
 #
 # Options:
 # MLIST OPTION
@@ -9,12 +9,14 @@
 # MAILBOX
 #    The maildir subfolder (e.g. Inbox, Sent, etc.)
 # NUM
-#    The number of most recent emails to show 
-# 
-# No options = shows the latest 10 unseen emails in $MAILDIR/Inbox 
+#    The number of most recent emails to show
+#
+# No options = shows the latest 10 unseen emails in $MAILDIR/Inbox
 
-
-[ -z $MAILDIR ] && printf "MAILDIR not set. Try 'export MAILDIR=/path/to/maildir'." && exit 
+if [ -z $MAILDIR ]; then
+    printf "MAILDIR not set. Try 'export MAILDIR=/path/to/maildir'."
+    exit
+fi
 
 context="$MAILDIR/Inbox"
 option="-s"
@@ -33,6 +35,11 @@ do
     fi
 done
 
-[[ -z $(mlist $option $context ) ]] && exit 
+[[ -z $(mlist $option $context ) ]] && exit
 
-mlist $option $context | msort -d -r | mseq -S | mscan | head -n $max | sed '1!G;h;$!d'
+mlist $option $context | \
+        msort -d -r | \
+        mseq -S | \
+        mscan | \
+        head -n $max | \
+        sed '1!G;h;$!d'

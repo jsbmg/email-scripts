@@ -1,13 +1,14 @@
 #! /bin/sh -e
 #
 # Download email attachments
-# Usage: 
+# Usage:
 #    md [NUM]
 # Options:
 #    NUM - the email (as enumerated by the `m` command)
 
 case $1 in
-    ''|*[!0-9]*) printf "No message number specified. Use the \"m\" command to view a list of messages.\n" && exit ;;
+    ''|*[!0-9]*) printf "No message number specified. \
+            Use the \"m\" command to view a list of messages.\n" && exit ;;
     *)
 esac
 
@@ -17,7 +18,7 @@ printf "\nDownload attachments? [Y/n]: "
 
 read confirm
 
-if [[ $confirm = @(Y|y|yes) ]] 
+if [[ $confirm = @(Y|y|yes) ]]
 then
     mshow -x $1
 else
