@@ -35,7 +35,7 @@ do
     fi
 done
 
-[[ -z $(mlist $option $context ) ]] && exit
+[ -z "$(mlist $option $context)" ] && exit
 
 mlist $option $context | \
         msort -d -r | \
