@@ -1,0 +1,82 @@
+#! /bin/bash
+
+# This is needed for fzf preview to work, if using zsh
+export SHELL=/bin/bash
+
+_email_num() {
+    echo "$1" | grep -o -E '[0-9]+' | head -1 | sed -e 's/^0\+//'
+}
+
+_mshow() {
+    mshow $(_email_num "$1") | mflow -f
+}
+
+_mflag() {
+    mflag $1 $(_email_num "$2")
+}
+
+_mrep() {
+    mrep $(_email_num "$1")
+}
+
+_load() {
+    mlist "$1" "$2" | msort -d -r | mseq -S | mscan
+}
+
+_mless() {
+    mless $(_email_num "$1")
+}
+
+_mdown() {
+    md $(_email_num "$1")
+}
+
+_hilight_links() {
+    grep -w -C 20 -- "$1" | \
+        rg -F --color=always -w --colors match:style:underline \
+        --passthru "$1" | \
+        mflow -f
+}
+
+_change_context() {
+    echo "Enter flag: "
+    read -r flag
+    export mailbox=$flag
+}
+
+_mlinks() {
+    export -f _email_num
+    export -f _mshow
+    export -f _hilight_links
+
+    content=$(_mshow "$1")
+
+    if command -v "urlscan" > /dev/null 2>&1; then
+        links="$(echo \"$content\" | urlscan -d -n | sed '/mailto/d')"
+    else
+        echo "urlscan not found. Using dodgy method."
+        links="$(echo \"$content\" | grep http | sed 's/http/\nhttp/g' | \
+            grep ^http | sed 's/\(^http[^ <]*\)\(.*\)/\1/g' | \
+            cat -n - | sort -uk2 | sort -nk1 | cut -f2- )"
+    fi
+
+    [[ -z "$links" ]] && links="No links found."
+
+    url=$(echo "$links" | fzf \
+        --preview="_mshow \"$1\" | _hilight_links {}" \
+        --border \
+        --height 100% \
+        --bind "ctrl-o:execute*export MOZ_ENABLE_WAYLAND=1; firefox {} </dev/null >/dev/null 2>&1 & disown*" \
+        --bind "ctrl-h:preview-half-page-down" \
+        --bind "ctrl-l:preview-half-page-up")
+
+    [[ -z "$url" || "$links" == "No links found." ]] && return
+
+    if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+        echo "$url" | wl-copy
+    else
+        echo "$url" | xclip -selection clipboard
+    fi
+
+    echo "Link copied to clipboard:\n$url"
+}

@@ -1,15 +1,30 @@
-#! /bin/sh -e
+#! /bin/bash
 #
-# Helper for mflag (default to -S, aka "mark seen") 
+# Helper for mflag (default to -S, aka "mark seen")
+
+read -r -d '' USAGE << EndOfMessage
+Usage: $(basename "$0") [OPTION] [IDX]
+
+Options
+    Options are the same as for mflag. The only difference is this script
+    will assume to mark emails read if the type of flag is not specified.
+EndOfMessage
+
+usage() {
+    echo "$USAGE"
+}
 
 option="-S"
 
 for var in "$@"
 do
-   case $var in
-       ''|*[0-9]*) idx=$var ;;
-       *) option=$var ;;
-   esac
+    if [[ "$var" == @(-h|--help) ]]; then
+        usage && exit 0
+    fi
+    case $var in
+        ''|*[0-9]*) idx=$var ;;
+        *) option=$var ;;
+    esac
 done
 
-mflag $option $idx
+mflag "$option" "$idx"

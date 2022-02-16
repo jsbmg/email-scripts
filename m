@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 #
 # List most recent emails
 # Usage: $ m [MLIST OPTION] [MAILBOX] [NUM]

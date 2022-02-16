@@ -1,1 +1,0 @@
-mlist $1 $2 | msort -d -r | mseq -S | mscan

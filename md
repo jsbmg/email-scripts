@@ -1,4 +1,4 @@
-#! /bin/sh -e
+#! /bin/bash
 #
 # Download email attachments
 # Usage:
@@ -13,16 +13,13 @@ case $1 in
 esac
 
 printf "\33[0;31m$(mscan $1)\033[0m\n\n"
-mshow -t $1
+mshow -t "$1"
 printf "\nDownload attachments? [Y/n]: "
 
 read confirm
 
-if [[ $confirm = @(Y|y|yes) ]]
-then
-    mshow -x $1
+if [[ "$confirm" == @(Y|y|yes) ]]; then
+    mshow -x "$1"
 else
     printf ""
-    return
 fi
-
