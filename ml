@@ -2,6 +2,10 @@
 #
 # Fzf email viewer
 #
+
+# set -euo pipefail
+# IFS=$'\n\t'
+
 source lib;
 
 read -r -d '' USAGE << EndOfMessage
@@ -97,12 +101,13 @@ while true; do
     selection=$(_load $option $mailbox | fzf \
         --height 100% \
         --border \
+        --no-sort \
         --preview="source lib; _mshow {}" \
         --bind "ctrl-h:preview-half-page-down" \
         --bind "ctrl-l:preview-half-page-up" \
         --bind "ctrl-u:execute-silent*source lib; _mflag -s {}*+reload[source lib; _load $option $mailbox]" \
         --bind "ctrl-r:execute-silent*source lib; _mflag -S {}*+reload[source lib; _load $option $mailbox]" \
-        --bind "bs:execute-silent*source lib; _mflag -T {}*+reload[source lib; _load $option $mailbox]" \
+        --bind "ctrl-t:execute-silent*source lib; _mflag -T {}*+reload[source lib; _load $option $mailbox]" \
         --bind "enter:execute*source lib; _mless {} < /dev/tty > /dev/tty 2>&1*" \
         --bind "ctrl-f:execute*mfwd {} < /dev/tty > /dev/tty 2>&1*" \
         --bind "ctrl-n:execute*mcom < /dev/tty > /dev/tty 2>&1*" \
