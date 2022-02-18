@@ -34,6 +34,7 @@ Keybindings:
     ctrl+r    = mark read
     ctrl+u    = mark unread
     backspace = trash message
+    ctrl_m    = change context
     ctrl+v    = view a message
     ctrl+f    = forward a message
     ctrl+r    = reply to a message
@@ -98,21 +99,23 @@ fi
 [[ -z "$(mlist $option $mailbox)" ]] && exit
 
 while true; do
-    selection=$(_load $option $mailbox | fzf \
+    selection=$(_load $option $mailbox | mscan | fzf \
         --height 100% \
         --border \
         --no-sort \
         --preview="source lib; _mshow {}" \
-        --bind "ctrl-h:preview-half-page-down" \
-        --bind "ctrl-l:preview-half-page-up" \
-        --bind "ctrl-u:execute-silent*source lib; _mflag -s {}*+reload[source lib; _load $option $mailbox]" \
-        --bind "ctrl-r:execute-silent*source lib; _mflag -S {}*+reload[source lib; _load $option $mailbox]" \
-        --bind "ctrl-t:execute-silent*source lib; _mflag -T {}*+reload[source lib; _load $option $mailbox]" \
+        --bind "ctrl-l:preview-half-page-down" \
+        --bind "ctrl-h:preview-half-page-up" \
         --bind "enter:execute*source lib; _mless {} < /dev/tty > /dev/tty 2>&1*" \
+        --bind "ctrl-u:execute-silent*source lib; _mflag -s {}*+reload[source lib; _load $option $mailbox | mscan]" \
+        --bind "ctrl-r:execute-silent*source lib; _mflag -S {}*+reload[source lib; _load $option $mailbox | mscan]" \
+        --bind "ctrl-t:execute-silent*source lib; _mflag -T {}*+reload[source lib; _load $option $mailbox | mscan]" \
         --bind "ctrl-f:execute*mfwd {} < /dev/tty > /dev/tty 2>&1*" \
+        --bind "ctrl-i:execute*source lib; _change_context*+reload[cat $HOME/.mblaze/seq | mscan]" \
         --bind "ctrl-n:execute*mcom < /dev/tty > /dev/tty 2>&1*" \
         --bind "ctrl-o:execute*source lib; _mrep {} < /dev/tty > /dev/tty 2>&1*" \
         --bind "ctrl-b:execute*source lib; _mlinks {} < /dev/tty > /dev/tty 2>&1*" \
+        --bind "ctrl-g:execute[source lib; _mgrep $option $mailbox < /dev/tty > /dev/tty 2>&1]+reload[cat $HOME/.mblaze/seq | mscan]" \
         --bind "ctrl-d:execute*source lib; _mdown {} < /dev/tty > /dev/tty 2>&1*")
 
     [[ -z "$selection" ]] && exit

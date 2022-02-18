@@ -20,7 +20,7 @@ _mrep() {
 }
 
 _load() {
-    mlist "$1" "$2" | msort -d -r | mseq -S | mscan
+    mlist "$1" "$2" | msort -d -r | mseq -S
 }
 
 _mless() {
@@ -31,6 +31,18 @@ _mdown() {
     md $(_email_num "$1")
 }
 
+_mgrep() {
+    # magrep the current sequence. If no arg is passed then
+    # then reload the original sequence.
+    export -f _load
+    read -r -p "magrep: " -i "/:" -e gr
+    if [ -z "$gr" ]; then
+        _load "$1" "$2"
+        return
+    fi
+    cat "$HOME/.mblaze/seq" | magrep "$gr" | msort -d -r | mseq -S
+}
+
 _hilight_links() {
     grep -w -C 20 -- "$1" | \
         rg -F --color=always -w --colors match:style:underline \
@@ -39,9 +51,9 @@ _hilight_links() {
 }
 
 _change_context() {
-    echo "Enter flag: "
-    read -r flag
-    export mailbox=$flag
+    read -r -p "mlist: " -i "$MAILDIR/" -e options
+    # intentionally unquoted to preserve options
+    mlist $options | msort -d -r | mseq -S
 }
 
 _mlinks() {
@@ -66,7 +78,7 @@ _mlinks() {
         --preview="_mshow \"$1\" | _hilight_links {}" \
         --border \
         --height 100% \
-        --bind "ctrl-o:execute*export MOZ_ENABLE_WAYLAND=1; firefox {} </dev/null >/dev/null 2>&1 & disown*" \
+        --bind "ctrl-o:execute*$BROWSER {} </dev/null >/dev/null 2>&1 & disown*" \
         --bind "ctrl-h:preview-half-page-down" \
         --bind "ctrl-l:preview-half-page-up")
 
