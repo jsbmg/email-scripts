@@ -1,10 +1,6 @@
 #! /bin/bash
 #
 # Fzf email viewer
-#
-
-# set -euo pipefail
-# IFS=$'\n\t'
 
 source lib;
 
@@ -98,12 +94,20 @@ fi
 
 [[ -z "$(mlist $option $mailbox)" ]] && exit
 
+# position the preview on bottom if column with < 140
+if [[ "$(tput cols)" -lt 140 ]]; then
+    preview_pos="down"
+else
+    preview_pos="right"
+fi
+
 while true; do
     selection=$(_load $option $mailbox | mscan | fzf \
         --height 100% \
         --border \
         --no-sort \
         --preview="source lib; _mshow {}" \
+        --preview-window="$preview_pos" \
         --bind "ctrl-l:preview-half-page-down" \
         --bind "ctrl-h:preview-half-page-up" \
         --bind "enter:execute*source lib; _mless {} < /dev/tty > /dev/tty 2>&1*" \
