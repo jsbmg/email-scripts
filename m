@@ -12,6 +12,7 @@
 #    The number of most recent emails to show
 #
 # No options = shows the latest 10 unseen emails in $MAILDIR/Inbox
+source lib;
 
 if [ -z $MAILDIR ]; then
     printf "MAILDIR not set. Try 'export MAILDIR=/path/to/maildir'."
@@ -38,7 +39,7 @@ done
 [ -z "$(mlist $option $context)" ] && exit
 
 mlist $option $context | \
-        msort -d -r | \
+        ml_sort | \
         mseq -S | \
         mscan | \
         head -n $max | \
