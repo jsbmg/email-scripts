@@ -3,6 +3,19 @@
 # This is needed for fzf preview to work, if using zsh
 export SHELL=/bin/bash
 
+# Use the correct msort binary. On Ubuntu msort is mblaze-sort.
+if command -v mblaze-sort > /dev/null 2>&1; then
+    ml_sort() {
+        mblaze-sort -d -r
+    }
+else
+    ml_sort() {
+        msort -d -r
+    }
+fi
+
+export -f ml_sort
+
 _email_num() {
     echo "$1" | grep -o -E '[0-9]+' | head -1 | sed -e 's/^0\+//'
 }
@@ -20,7 +33,7 @@ _mrep() {
 }
 
 _load() {
-    mlist "$1" "$2" | msort -d -r | mseq -S
+    mlist "$1" "$2" | ml_sort | mseq -S
 }
 
 _mless() {
@@ -40,7 +53,7 @@ _mgrep() {
         _load "$1" "$2"
         return
     fi
-    cat "$HOME/.mblaze/seq" | magrep "$gr" | msort -d -r | mseq -S
+    cat "$HOME/.mblaze/seq" | magrep "$gr" | ml_sort | mseq -S
 }
 
 _hilight_links() {
